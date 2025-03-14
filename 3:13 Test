@@ -1,0 +1,28 @@
+//hello!
+
+let x, y;
+let angle = 0;
+function setup() {
+  createCanvas(400, 400);
+  x = width/2 + 200;
+  y = height/2;
+}
+
+function draw() {
+  background(220);
+  push();
+  translate(x,y);
+  noFill();
+  beginShape();
+  let lineLength = 130;
+  for(let i=0; i<=lineLength; i+=lineLength/10){
+    let v = 10*sin(frameCount*0.1-i);
+    vertex(i, v);
+    //circle(i, v, 5);
+    // let s = map(v, -10, 10, 10, 60)
+    // size(s)
+  }
+  endShape();
+  
+  pop();
+}
