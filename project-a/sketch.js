@@ -6,10 +6,10 @@ let t = 0;
 let s = 20;
 
 function setup() {
-  createCanvas(800, 500);
-  //  let canvas = createCanvas(800, 500);
-  // canvas.id("p5-canvas");
-  // canvas.parent("p5-canvas-container");
+  //createCanvas(800, 500);
+   let canvas = createCanvas(800, 500);
+  canvas.id("p5-canvas");
+  canvas.parent("p5-canvas-container");
   x = width / 2;
   y = random(0, height);
 }
