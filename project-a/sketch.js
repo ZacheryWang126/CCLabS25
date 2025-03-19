@@ -3,7 +3,7 @@ let m = 0.008;
 let n = 0.03;
 let j = 10;
 let t = 0;
-let s = 20;
+let s = 30;
 
 function setup() {
   //createCanvas(800, 500);
