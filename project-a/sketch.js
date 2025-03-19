@@ -1,152 +1,96 @@
-/*
-Template for IMA's Creative Coding Lab 
-
-Project A: Generative Creatures
-CCLaboratories Biodiversity Atlas 
-*/
-
-let virus;
-let plasticEaten = 0;
-let isDead = false;
+let x, y;
+let m = 0.008;
+let n = 0.03;
+let j = 10;
+let t = 0;
 let bubbles = [];
-let rotationAngle = 0;
-let shakeAmount = 0;
-let recoveryTimer = 0;
-let i;
 
 function setup() {
-  //createCanvas(400, 400);
-  let canvas = createCanvas(800, 500);
+  createCanvas(800, 500);
+   let canvas = createCanvas(800, 500);
   canvas.id("p5-canvas");
   canvas.parent("p5-canvas-container");
-  virus = new Virus();
+  x = width / 2;
+  y = random(0, height);
+
+  for (let i = 0; i < 20; i++) {
+    bubbles.push({
+      x: random(width),
+      y: random(height),
+      size: random(5, 15),
+      speed: random(0.5, 2),
+    });
+  }
 }
 
 function draw() {
-  // i = 190*sin(0.01*frameCount)
-  // sole.int(frameCount)
-  background(20, 60, 180); // Water background
+  let r = map(sin(frameCount * 0.02), -1, 1, 0, 100);
+  let g = map(sin(frameCount * 0.03), -1, 1, 100, 200);
+  let b = map(sin(frameCount * 0.01), -1, 1, 200, 255);
+  background(r, g, b, 50);
 
-  if (!isDead) {
-    virus.move(mouseX, mouseY);
-    virus.display();
-    updateBubbles();
-
-    // Gradually recover if no new plastic is eaten
-    if (plasticEaten > 0) {
-      recoveryTimer++;
-      if (recoveryTimer > 200) {
-        // After some time, virus recovers
-        plasticEaten -= 5;
-        if (plasticEaten < 0) plasticEaten = 0;
-        recoveryTimer = 0;
-      }
+  // Draw wave patterns
+  for (let i = 0; i < 5; i++) {
+    noFill();
+    stroke(255, 255, 255, 50);
+    beginShape();
+    for (let x = 0; x < width; x += 20) {
+      let y =
+        height / 2 +
+        50 * sin(x * 0.02 + frameCount * 0.02 + i) +
+        30 * sin(x * 0.01 - frameCount * 0.03);
+      vertex(x, y);
     }
-  } else {
-    fill(255);
-    textSize(20);
-    text("💀 DEAD!💀", width / 2 - 60, height / 2);
+    endShape();
   }
-}
-
-// Press any key to feed plastic
-function keyPressed() {
-  if (!isDead) {
-    let plasticAmount = random(20, 40);
-    plasticEaten += plasticAmount;
-    recoveryTimer = 0; // Reset recovery timer
-    if (plasticEaten > 80) {
-      shakeAmount = 3; // Virus starts shaking if overfed
+  for (let bubble of bubbles) {
+    bubble.y -= bubble.speed;
+    if (bubble.y < -20) {
+      bubble.y = height + 20;
+      bubble.x = random(width);
     }
-    if (plasticEaten > 100) {
-      isDead = true; // If overfed, virus dies
-    } else {
-      virus.releaseBubbles();
-    }
-  }
-}
-
-// Update floating bubbles
-function updateBubbles() {
-  for (let i = bubbles.length - 1; i >= 0; i--) {
-    bubbles[i].move();
-    bubbles[i].display();
-    if (bubbles[i].y < -10) {
-      bubbles.splice(i, 1);
-    }
-  }
-}
-
-class Virus {
-  constructor() {
-    this.x = width / 2;
-    this.y = height / 2;
-  }
-
-  move(targetX, targetY) {
-    let moveSpeed = isDead ? 0 : 0.05; // Stop moving when dead
-    this.x = lerp(this.x, targetX, moveSpeed);
-    this.y = lerp(this.y, targetY, moveSpeed);
-  }
-
-  display() {
-    rotationAngle += 0.05; // Rotate spikes continuously
-    let shakeX = random(-shakeAmount, shakeAmount);
-    let shakeY = random(-shakeAmount, shakeAmount);
-
-    push();
-    translate(this.x + shakeX, this.y + shakeY);
-    rotate(rotationAngle);
-
-    stroke(0);
-    if (isDead) {
-      fill(100); // Turn gray if dead
-    } else if (plasticEaten > 80) {
-      fill(150, 50, 200); // Purple when struggling
-    } else if (plasticEaten > 40) {
-      fill(100, 255, 100); // Green when happy eating
-    } else {
-      fill(255, 0, 0); // Normal red
-    }
-
-    ellipse(0, 0, 40, 40); // Body
-
-    // Spikes around the body
-    strokeWeight(isDead ? 1 : 2);
-    stroke(isDead ? 100 : 255, 0, 0);
-    for (let i = 0; i < TWO_PI; i += PI / 6) {
-      let x1 = cos(i) * 20;
-      let y1 = sin(i) * 20;
-      let x2 = cos(i) * (isDead ? 25 : 30);
-      let y2 = sin(i) * (isDead ? 25 : 30);
-      line(x1, y1, x2, y2);
-    }
-
-    pop();
-  }
-
-  releaseBubbles() {
-    for (let i = 0; i < 3; i++) {
-      bubbles.push(new Bubble(this.x, this.y));
-    }
-  }
-}
-
-class Bubble {
-  constructor(x, y) {
-    this.x = x + random(-10, 10);
-    this.y = y;
-    this.size = random(5, 10);
-    this.speed = random(1, 3);
-  }
-
-  move() {
-    this.y -= this.speed; // Move bubbles up
-  }
-
-  display() {
-    fill(200, 200, 255, 150);
+    fill(255, 255, 255, 100);
     noStroke();
-    ellipse(this.x, this.y, this.size);
+    ellipse(bubble.x, bubble.y, bubble.size);
+  }
+  x = width / 4 + 260 * noise(frameCount * m);
+  y = height / 4 + 260 * noise(frameCount * n);
+  let dynamicBlue = map(sin(frameCount * 0.05), -1, 1, 30, 255);
+  // let Offset = map(cos(frameCount * 0.05), -1, 1, 100, 255);
+  noStroke();
+  fill(0, 0, dynamicBlue);
+  circle(x, y, j);
+  // console.log(frameCount)
+
+  if (keyIsPressed) {
+    m = 0.005;
+    n = 0.01;
+  } else {
+    m = 0.008;
+    n = 0.03;
+  }
+
+  //Feed it with the key pressed
+  if (mouseIsPressed) {
+    noStroke();
+    fill(random(0, 255), random(0, 255), random(0, 255));
+    circle(mouseX, mouseY, 10);
+    j = j + 3;
+  }
+  circle(x, y, j);
+
+  //Do Not Feed Too Much
+  if (j > 500) {
+    text("💀DEAD!💀", width / 2 - 60, height / 2);
+    j = 0;
+    background(0);
+  }
+  if (j >= 50) {
+    fill(255, 175, 150);
+    circle(
+      x + 180 * sin(frameCount * 0.03),
+      y + 180 * cos(frameCount * 0.03),
+      j * 0.5
+    );
   }
 }
