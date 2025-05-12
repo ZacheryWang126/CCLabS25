@@ -851,6 +851,11 @@ class Person {
         this.swayAngle = 0; // Add sway angle for stage 2
         this.jumpTimer = 0; // Add jump timer for stage 2
         this.isJumping = false; // Add jumping state for stage 2
+        this.wobbleOffset = 0; // Add wobble effect
+        this.emotionalState = 0; // Track emotional state for movement variations
+        this.spinAngle = 0; // Add spinning effect
+        this.pulseScale = 1; // Add pulsing effect
+        this.shakeOffset = 0; // Add additional shake effect
 
         this.velocity = 0; // Vertical velocity
         this.gravity = 1; // Gravity acceleration
@@ -895,16 +900,36 @@ class Person {
         }
 
         if (stage == 2) {
-            // Enhanced emotional movements for stage 2
-            this.trembleOffset = sin(frameCount * 15) * 4; // More intense trembling
-            this.swayAngle = sin(frameCount * 3) * 0.2; // More pronounced swaying
+            // Update emotional state
+            this.emotionalState = (this.emotionalState + 0.01) % 1;
             
-            // Add jumping behavior
+            // Enhanced emotional movements for stage 2
+            // More intense variable trembling based on emotional state
+            let trembleIntensity = map(sin(this.emotionalState * TWO_PI), -1, 1, 4, 10);
+            this.trembleOffset = sin(frameCount * 25) * trembleIntensity;
+            
+            // More pronounced swaying with variable intensity
+            let swayIntensity = map(cos(this.emotionalState * TWO_PI), -1, 1, 0.15, 0.4);
+            this.swayAngle = sin(frameCount * 5) * swayIntensity;
+            
+            // Enhanced wobble effect
+            this.wobbleOffset = sin(frameCount * 12) * 5;
+            
+            // Add spinning effect
+            this.spinAngle = sin(frameCount * 3) * 0.3;
+            
+            // Add pulsing effect
+            this.pulseScale = 1 + sin(frameCount * 8) * 0.1;
+            
+            // Add additional shake effect
+            this.shakeOffset = sin(frameCount * 30) * 3;
+            
+            // More frequent jumping behavior with enhanced effects
             if (!this.isJumping) {
                 this.jumpTimer++;
-                if (this.jumpTimer > 60) { // Jump every 60 frames
+                if (this.jumpTimer > 25) { // Even more frequent jumps
                     this.isJumping = true;
-                    this.velocity = this.jumpForce;
+                    this.velocity = this.jumpForce * 1.5; // Higher jumps
                     this.jumpTimer = 0;
                 }
             }
@@ -912,6 +937,12 @@ class Person {
             if (this.isJumping) {
                 this.velocity += this.gravity;
                 this.y += this.velocity;
+                
+                // Enhanced horizontal movement during jumps
+                this.x += sin(frameCount * 8) * 3;
+                
+                // Add vertical wobble during jumps
+                this.y += sin(frameCount * 15) * 2;
                 
                 // Reset jump when back on ground
                 if (this.y >= groundLevel - this.size / 2) {
@@ -922,9 +953,10 @@ class Person {
 
             push(); // Save the current transformation state
             translate(this.x, this.y);
-            rotate(this.swayAngle);
+            rotate(this.swayAngle + this.spinAngle);
+            scale(this.pulseScale);
             translate(-this.x, -this.y);
-            this.x += this.trembleOffset;
+            this.x += this.trembleOffset + this.wobbleOffset + this.shakeOffset;
         }
 
         if (stage == 4) {
