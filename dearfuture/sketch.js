@@ -847,6 +847,10 @@ class Person {
         this.isLeft = isLeft;
         this.identity = identity;
         this.state = state;
+        this.trembleOffset = 0; // Add tremble offset for stage 2
+        this.swayAngle = 0; // Add sway angle for stage 2
+        this.jumpTimer = 0; // Add jump timer for stage 2
+        this.isJumping = false; // Add jumping state for stage 2
 
         this.velocity = 0; // Vertical velocity
         this.gravity = 1; // Gravity acceleration
@@ -887,17 +891,47 @@ class Person {
 
     display() {
         if (stage == 1) {
-
             this.jump();
         }
 
-        if (stage == 4) {
+        if (stage == 2) {
+            // Enhanced emotional movements for stage 2
+            this.trembleOffset = sin(frameCount * 15) * 4; // More intense trembling
+            this.swayAngle = sin(frameCount * 3) * 0.2; // More pronounced swaying
+            
+            // Add jumping behavior
+            if (!this.isJumping) {
+                this.jumpTimer++;
+                if (this.jumpTimer > 60) { // Jump every 60 frames
+                    this.isJumping = true;
+                    this.velocity = this.jumpForce;
+                    this.jumpTimer = 0;
+                }
+            }
+            
+            if (this.isJumping) {
+                this.velocity += this.gravity;
+                this.y += this.velocity;
+                
+                // Reset jump when back on ground
+                if (this.y >= groundLevel - this.size / 2) {
+                    this.y = groundLevel - this.size / 2;
+                    this.isJumping = false;
+                }
+            }
 
+            push(); // Save the current transformation state
+            translate(this.x, this.y);
+            rotate(this.swayAngle);
+            translate(-this.x, -this.y);
+            this.x += this.trembleOffset;
+        }
+
+        if (stage == 4) {
             this.jump();
         }
 
         if (stage == 5) {
-
             this.jump();
         }
 
@@ -919,10 +953,12 @@ class Person {
             this.isHappy();
         }
         if (this.state == "cry") {
-
             this.isCry();
         }
 
+        if (stage == 2) {
+            pop(); // Restore the transformation state
+        }
 
         if (this.state == "angry") {
             // Body
