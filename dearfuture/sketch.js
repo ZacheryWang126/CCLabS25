@@ -57,7 +57,7 @@ let brokenHeart;
 //stage3
 let stars = [];
 let rainbow, door, moon, ball;
-let start1,start2,start3;
+let start1, start2, start3;
 
 let music1;
 let music2;
@@ -72,9 +72,9 @@ function preload() {
     rainMusic = loadSound('assets/rain.mp3'); // For stage 2
     bgmMusic = loadSound('assets/BGM.mp3'); // 加载BGM
 
-    music1 = loadSound('assets/1.mp3'); 
-    music2 = loadSound('assets/2.mp3'); 
-    music3 = loadSound('assets/3.mp3'); 
+    music1 = loadSound('assets/1.mp3');
+    music2 = loadSound('assets/2.mp3');
+    music3 = loadSound('assets/3.mp3');
 }
 
 function setup() {
@@ -93,20 +93,20 @@ function setup() {
     for (let i = 0; i < 200; i++) {
         stars.push(new Star());
     }
-     start1 = new Star();
+    start1 = new Star();
     start1.x = width * 0.5;
     start1.y = height * 0.2;
     start1.size = 10;
     stars.push(start1);
 
-     start2 = new Star();
+    start2 = new Star();
     start2.x = width * 0.2;
     start2.y = height * 0.7;
     start2.size = 10;
     stars.push(start2);
 
 
-     start3 = new Star();
+    start3 = new Star();
     start3.x = width * 0.3;
     start3.y = height * 0.1;
     start3.size = 10;
@@ -121,7 +121,7 @@ function setup() {
     targetX = windowWidth / 10;
     targetY = windowHeight / 10;
 
-//
+    //
     sadMusic = loadSound('assets/sad.wav'); // Sad music for stages 2 and 3 (wav)
     happyMusic = loadSound('assets/happy.wav'); // Happy music for stage 4 (wav)
     bgColor = color(135, 206, 250); // Blue sky background
@@ -137,13 +137,13 @@ function setup() {
     }
 
 
-// Screen cracks for stage 2
+    // Screen cracks for stage 2
     for (let i = 0; i < 5; i++) {
         screenCracks.push(new ScreenCrack(random(width / 4, 3 * width / 4), random(height / 2, height), random(50, 150)));
     }
 
 
-// Position of the house in stage 5
+    // Position of the house in stage 5
     houseX = width / 2 - 100;
     houseY = groundLevel - windowHeight / 7;
 
@@ -323,11 +323,14 @@ function draw() {
         womenCryMusic.stop();
         sadMusic.stop();
         rainMusic.stop();
-        
+
         // 播放BGM
         if (!bgmMusic.isPlaying()) {
             bgmMusic.loop();
             bgmMusic.setVolume(0.3); // 设置音量为30%
+        }
+        if((music1.isPlaying() == false) && (music2.isPlaying() == false) && (music3.isPlaying() == false)){
+            bgmMusic.setVolume(0.5); // 设置音量为30%
         }
 
         background(10, 5, 20);
@@ -335,8 +338,8 @@ function draw() {
         // 先绘制普通星星
         for (let star of stars) {
             if (star !== start1 && star !== start2 && star !== start3) {
-            star.update();
-            star.display();
+                star.update();
+                star.display();
             }
         }
 
@@ -359,13 +362,13 @@ function draw() {
         ball.update();
         ball.display();
         moon.display();
-        
+
         // 添加提示文字
         fill(255, 255, 255, 200);
         textSize(24);
         textAlign(CENTER);
-        text("Click the brightest stars!", width/2, height * 0.1);
-        
+        text("Click the brightest stars!", width / 2, height * 0.1);
+
         pop();
     }
     displayStoryText(); // Display the text with the fade-in effect
@@ -380,7 +383,7 @@ function draw() {
 function drawStage1() {
     // 绘制天空背景
     background(135, 206, 235); // 更亮的蓝色天空
-    
+
     // 绘制太阳
     drawSunStageOne();
 
@@ -392,16 +395,16 @@ function drawStage1() {
 
     // 绘制教学楼
     drawSchoolBuilding();
-    
+
     // 绘制操场
     drawPlayground();
-    
+
     // 绘制树木
     drawTrees();
-    
+
     // 绘制地面
     drawGround();
-    
+
     // 绘制人物和互动元素
     if (moveEnabled && isHeart == false) {
         person1.speed = 10;
@@ -422,19 +425,19 @@ function drawStage1() {
     // 绘制人物
     person1.display();
     person2.display();
-    
+
     if (isHandInHand) {
         stroke(255, 100, 100);
         strokeWeight(5);
         line(person1.x + 20, person1.y, person2.x - 20, person2.y);
     }
-    
+
     // 添加提示文字
     fill(0, 0, 0, 200);
     textSize(24);
     textAlign(CENTER);
-    text("Press 2 & 3 to proceed the story.", width/2, height * 0.9);
-    
+    text("Press 2 & 3 to proceed the story.", width / 2, height * 0.9);
+
     displayInstructions();
 }
 
@@ -443,15 +446,15 @@ function drawSchoolBuilding() {
     // 主楼
     fill(240, 240, 240);
     rect(width * 0.3, height * 0.2, width * 0.4, height * 0.4);
-    
+
     // 窗户
     fill(200, 200, 255);
-    for(let i = 0; i < 3; i++) {
-        for(let j = 0; j < 4; j++) {
+    for (let i = 0; i < 3; i++) {
+        for (let j = 0; j < 4; j++) {
             rect(width * 0.35 + j * width * 0.1, height * 0.25 + i * height * 0.1, width * 0.05, height * 0.05);
         }
     }
-    
+
     // 屋顶
     fill(180, 180, 180);
     triangle(width * 0.3, height * 0.2, width * 0.7, height * 0.2, width * 0.5, height * 0.15);
@@ -462,11 +465,11 @@ function drawPlayground() {
     // 操场地面
     fill(100, 200, 100);
     ellipse(width * 0.5, height * 0.7, width * 0.3, height * 0.2);
-    
+
     // 跑道
     noFill();
     stroke(200, 200, 200);
-        strokeWeight(5);
+    strokeWeight(5);
     ellipse(width * 0.5, height * 0.7, width * 0.35, height * 0.25);
 }
 
@@ -477,7 +480,7 @@ function drawTrees() {
     rect(width * 0.1, height * 0.5, width * 0.02, height * 0.1);
     fill(34, 139, 34);
     ellipse(width * 0.1, height * 0.45, width * 0.05, height * 0.08);
-    
+
     // 右侧树
     fill(139, 69, 19);
     rect(width * 0.9, height * 0.5, width * 0.02, height * 0.1);
@@ -489,10 +492,10 @@ function drawTrees() {
 function drawStage2() {
     // 绘制室内背景
     background(40, 40, 60); // 深色室内背景
-    
+
     // 绘制窗户
     drawWindow();
-    
+
     // 绘制雨滴
     for (let i = raindrops.length - 1; i >= 0; i--) {
         raindrops[i].fall();
@@ -501,13 +504,13 @@ function drawStage2() {
             raindrops.splice(i, 1);
         }
     }
-    
+
     // 绘制沙发
     drawSofa();
-    
+
     // 绘制地面
     drawIndoorGround();
-    
+
     // 人物移动
     if (moveEnabled) {
         parent1.update(-0.5);
@@ -515,7 +518,7 @@ function drawStage2() {
         person1.x = width / 4;
         person2.x = 3 * width / 4;
     }
-    
+
     // 检查人物与父母的接触
     if (dist(parent1.x, parent1.y, person1.x, person1.y) < 50 || dist(parent2.x, parent2.y, person2.x, person2.y) < 50) {
         textToShow = "Life took a sharp turn when family expectations tore them apart.";
@@ -527,7 +530,7 @@ function drawStage2() {
     person1.clr = color(100, 200, 255);
     person1.display();
     person2.display();
-    
+
     displayInstructions();
 }
 
@@ -536,11 +539,11 @@ function drawWindow() {
     // 窗户框架
     fill(80, 80, 100);
     rect(width * 0.7, height * 0.2, width * 0.2, height * 0.3);
-    
+
     // 窗户玻璃
     fill(100, 100, 150, 100);
     rect(width * 0.71, height * 0.21, width * 0.18, height * 0.28);
-    
+
     // 窗框
     stroke(60, 60, 80);
     strokeWeight(3);
@@ -553,11 +556,11 @@ function drawSofa() {
     // 沙发主体
     fill(100, 80, 60);
     rect(width * 0.2, height * 0.6, width * 0.3, height * 0.15);
-    
+
     // 沙发靠背
     fill(90, 70, 50);
     rect(width * 0.2, height * 0.55, width * 0.3, height * 0.05);
-    
+
     // 沙发扶手
     fill(90, 70, 50);
     rect(width * 0.2, height * 0.6, width * 0.05, height * 0.15);
@@ -570,14 +573,14 @@ function drawIndoorGround() {
     noStroke();
     fill(60, 40, 20);
     rect(0, groundLevel, width, height - groundLevel);
-    
+
     // 木地板纹理
     stroke(40, 25, 15);
     strokeWeight(1);
     for (let i = 0; i < width; i += 30) {
         line(i, groundLevel, i, height);
     }
-    
+
     // 添加一些阴影效果
     fill(0, 0, 0, 20);
     rect(0, groundLevel, width, height - groundLevel);
@@ -599,7 +602,7 @@ function displayStoryText() {
         if (stage === 1 && textToShow === "Two boys fall in love.") {
             fill(255, 105, 180, fadeAlpha); // 粉色
         } else {
-        fill(255, fadeAlpha);
+            fill(255, fadeAlpha);
         }
         textSize(windowWidth / 50);
         textAlign(CENTER);
@@ -617,7 +620,7 @@ function keyPressed() {
         bgmMusic.stop(); // 停止BGM
         bgColor = color(135, 206, 250); // Blue sky background
         resetStage(1);
-        hearts =[];
+        hearts = [];
     }
 
 
@@ -708,18 +711,28 @@ function mousePressed() {
         person2.pressed(mouseX, mouseY);
         moveEnabled = true; // Enable random movement within half regions
     } else if (stage === 3) {
-      if(start1.checkClick()){
-          music1.stop();
-          music1.play();
-      }
-        if(start2.checkClick()){
+        if (start1.checkClick()) {
+            music1.stop();
             music2.stop();
-            music2.play();
+            music3.stop();
+            music1.play();
+            bgmMusic.setVolume(0.1); // 设置音量为30%
         }
-        if(start3.checkClick()){
+        if (start2.checkClick()) {
+            music1.stop();
+            music2.stop();
+            music3.stop();
+            music2.play();
+            bgmMusic.setVolume(0.1); // 设置音量为30%
+        }
+        if (start3.checkClick()) {
+            music1.stop();
+            music2.stop();
             music3.stop();
             music3.play();
+            bgmMusic.setVolume(0.1); // 设置音量为30%
         }
+        
     }
 }
 
@@ -776,11 +789,11 @@ function drawGround() {
     if (stage === 2) {
         // 绘制深色地面
         noStroke();
-        
+
         // 地面主体
         fill(30, 30, 50);
         rect(0, groundLevel, width, height - groundLevel);
-        
+
         // 添加一些随机的深色纹理
         for (let i = 0; i < 50; i++) {
             let x = random(width);
@@ -789,7 +802,7 @@ function drawGround() {
             fill(20, 20, 40, 100);
             ellipse(x, y, size, size);
         }
-        
+
         // 添加一些水洼效果
         for (let i = 0; i < 10; i++) {
             let x = random(width);
@@ -798,7 +811,7 @@ function drawGround() {
             fill(40, 40, 80, 50);
             ellipse(x, y, size, size);
         }
-        
+
         // 添加一些雨滴溅起的效果
         for (let i = 0; i < 20; i++) {
             let x = random(width);
@@ -809,9 +822,9 @@ function drawGround() {
         }
     } else {
         // 其他场景保持原来的地面效果
-    noStroke();
-    fill("#783f04");
-    rect(0, groundLevel, width, height - groundLevel);
+        noStroke();
+        fill("#783f04");
+        rect(0, groundLevel, width, height - groundLevel);
     }
 }
 
@@ -917,26 +930,26 @@ class Person {
             fill(this.clr);
             ellipse(this.x, this.y, this.size);
 
-// Left eye
+            // Left eye
             fill(255);
             ellipse(this.x - this.size / 6, this.y - this.size / 5, this.size / 4, this.size / 5);
 
-// Right eye
+            // Right eye
             fill(255);
             ellipse(this.x + this.size / 6, this.y - this.size / 5, this.size / 4, this.size / 5);
 
-// Pupil
+            // Pupil
             fill(0);
             ellipse(this.x - this.size / 7, this.y - this.size / 5, this.size / 10, this.size / 10); // Left pupil
             ellipse(this.x + this.size / 7, this.y - this.size / 5, this.size / 10, this.size / 10); // Right pupil
 
-// Eyebrow
+            // Eyebrow
             stroke(0);
             strokeWeight(3);
             line(this.x - this.size / 4, this.y - this.size / 3, this.x - this.size / 8, this.y - this.size / 4); // Left eyebrow
             line(this.x + this.size / 8, this.y - this.size / 4, this.x + this.size / 4, this.y - this.size / 3); // Right eyebrow
 
-// Angry mouth
+            // Angry mouth
             noFill();
             stroke(0);
             strokeWeight(2);
@@ -1343,7 +1356,7 @@ class RainbowPath {
 
         let x = lerp(this.startX, width, t);
         let y = lerp(this.startY, height - height * 0.2, t);
-        return {x, y};
+        return { x, y };
     }
 }
 
